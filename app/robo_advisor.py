@@ -23,16 +23,24 @@ while True:
 # TODO: assemble the request url to get daily data for the given stock symbol...
 for s in symbols:
     request_url = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=" + s + "&apikey={api_key}"
-    # TODO: use the "requests" package to issue a "GET" request to the specified url, and store the JSON response in a variable...
+    # use the "requests" package to issue a "GET" request to the specified url, and store the JSON response in a variable...
     response = requests.get(request_url)
     #print("RESPONSE STATUS: " + str(response.status_code))
     parsed_response = json.loads(response.text)
     #print(parsed_response)
-
-# TODO: further parse the JSON response...
-
-# TODO: traverse the nested response data structure to find the latest closing price and other values of interest...
-latest_price_usd = "$100,000.00"
+    #further parse the JSON response...
+    #traverse the nested response data structure to find the latest closing price and other values of interest...
+    #the following code on finding latest day was adapted from #opim-243 slack channel
+    tsd = parsed_response["Time Series (Daily)"] #> 'dict'
+    day_keys = tsd.keys() #> 'dict_keys' of all the day values
+    days = list(day_keys) #> 'list' of all the day values
+    #print(days[0]) # 'str' of the latest day!
+    latest_day = days[0] #> '2019-02-19'
+    latest_closing = tsd[latest_day]["4. close"]
+    print(latest_closing)
+    #recent_high = max(parsed_response["Time Series (Daily)"], key=lambda ev: ev["high"])
+    #print(recent_high)
+    #recent_low = 
 
 #
 # INFO OUTPUTS
