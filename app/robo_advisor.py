@@ -7,6 +7,9 @@ now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
 load_dotenv() # loads environment variables set in a ".env" file, including the value of the ALPHAVANTAGE_API_KEY variable
 
+def to_usd(my_price):
+    return "${0:,2f}".format(my_price)
+
 # see: https://www.alphavantage.co/support/#api-key
 api_key = os.environ.get("ALPHAVANTAGE_API_KEY")
 #print("API KEY: " + api_key) # TODO: remove or comment-out this line after you have verified the environment variable is getting read properly
@@ -60,8 +63,8 @@ last_refreshed = parsed_response["Meta Data"]["3. Last Refreshed"]
 #    print(f"STOCK SYMBOL: {s}")
 #    print("RUN AT: " +str(now))
 #    print("-----------------")
-#    print("LATEST DAY OF AVAILABLE DATA: June 4th, 2018")
-#    print(f"LATEST DAILY CLOSING PRICE: {latest_price_usd}")
+#    print("LATEST DAY OF AVAILABLE DATA:{last_refresed}")
+#    print(f"LATEST DAILY CLOSING PRICE: {to_usd(float(latest_closing))}")
 #    print("RECENT AVERAGE HIGH CLOSING PRICE: $101,000.00")
 #    print("RECENT AVERAGE LOW CLOSING PRICE: $99,000.00")
 #    print("-----------------")
