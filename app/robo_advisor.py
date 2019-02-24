@@ -18,32 +18,29 @@ api_key = os.environ.get("ALPHAVANTAGE_API_KEY")
 symbols =[]
 while True:
     symbol = input("Please specify a stock symbol: ")# TODO: capture user input, like... input("Please specify a stock symbol: ")
-    if symbol.isalpha() and len(symbol) <6 and symbol != "DONE":
-        symbols.append(symbol)
-    if symbol == "DONE":
+    if symbol.isalpha() and len(symbol) <6:
         break
     if not symbol.isalpha() or len(symbol) >5:
         print("Please enter a properly formatted stock ticker like 'MSFT'")
 
 # see: https://www.alphavantage.co/documentation/#daily (or a different endpoint, as desired)
 # TODO: assemble the request url to get daily data for the given stock symbol...
-for s in symbols:
-    request_url = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=" + s + "&apikey={api_key}"
-    # use the "requests" package to issue a "GET" request to the specified url, and store the JSON response in a variable...
-    response = requests.get(request_url)
-    #print("RESPONSE STATUS: " + str(response.status_code))
-    parsed_response = json.loads(response.text)
-    #print(parsed_response)
-    #further parse the JSON response...
-    #traverse the nested response data structure to find the latest closing price and other values of interest...
-    #the following code on finding latest day was adapted from #opim-243 slack channel
-    tsd = parsed_response["Time Series (Daily)"] #> 'dict'
-    day_keys = tsd.keys() #> 'dict_keys' of all the day values
-    days = list(day_keys) #> 'list' of all the day values
-    #print(days[0]) # 'str' of the latest day!
-    latest_day = days[0] #> '2019-02-19'
-    latest_closing = tsd[latest_day]["4. close"]
-    print(latest_closing)
+request_url = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=" + symbol + "&apikey={api_key}"
+# use the "requests" package to issue a "GET" request to the specified url, and store the JSON response in a variable...
+response = requests.get(request_url)
+#print("RESPONSE STATUS: " + str(response.status_code))
+parsed_response = json.loads(response.text)
+#print(parsed_response)
+#further parse the JSON response...
+#traverse the nested response data structure to find the latest closing price and other values of interest...
+#the following code on finding latest day was adapted from #opim-243 slack channel
+tsd = parsed_response["Time Series (Daily)"] #> 'dict'
+day_keys = tsd.keys() #> 'dict_keys' of all the day values
+days = list(day_keys) #> 'list' of all the day values
+#print(days[0]) # 'str' of the latest day!
+latest_day = days[0] #> '2019-02-19'
+latest_closing = tsd[latest_day]["4. close"]
+print(latest_closing)
 
 #with help from https://github.com/s2t2/robo-advisor-screencast/blob/master/app/robo_advisor.py
 high_prices = []
@@ -88,20 +85,19 @@ with open(csv_file_path, "w") as csv_file: # "w" means "open the file for writin
 
 
 # TODO: further revise the example outputs below to reflect real information
-for s in symbols:
-    print("-----------------")
-    print(f"STOCK SYMBOL: {s}")
-    print("RUN AT: " +str(now))
-    print("-----------------")
-    print("LATEST DAY OF AVAILABLE DATA:{last_refresed}")
-    print(f"LATEST CLOSE: {to_usd(float(latest_closing))}")
-    print(f"RECENT HIGH: {to_usd(float(recent_high))}")
-    print(f"RECENT LOW: {to_usd(float(recent_low))}")
-    print("-----------------")
-    print("RECOMMENDATION: Buy!")
-    print("RECOMMENDATION REASON: Because the latest closing price is within threshold XYZ etc., etc. and this fits within your risk tolerance etc., etc.")
-    print("-----------------")
-    print(f"WRITING DATA TO CSV: {csv_file_path}")
-    print("-----------------")
-    print("HAPPY INVESTING!")
-    print("------------------------------------------------------------------------------------------------")
+print("-----------------")
+print(f"STOCK SYMBOL: {symbol}")
+print("RUN AT: " +str(now))
+print("-----------------")
+print(f"LATEST DAY OF AVAILABLE DATA: {last_refreshed}")
+print(f"LATEST CLOSE: {to_usd(float(latest_closing))}")
+print(f"RECENT HIGH: {to_usd(float(recent_high))}")
+print(f"RECENT LOW: {to_usd(float(recent_low))}")
+print("-----------------")
+print("RECOMMENDATION: Buy!")
+print("RECOMMENDATION REASON: Because the latest closing price is within threshold XYZ etc., etc. and this fits within your risk tolerance etc., etc.")
+print("-----------------")
+print(f"WRITING DATA TO CSV: {csv_file_path}")
+print("-----------------")
+print("HAPPY INVESTING!")
+print("--------------------------------------------------------------")
