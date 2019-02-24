@@ -40,7 +40,7 @@ days = list(day_keys) #> 'list' of all the day values
 #print(days[0]) # 'str' of the latest day!
 latest_day = days[0] #> '2019-02-19'
 latest_closing = tsd[latest_day]["4. close"]
-print(latest_closing)
+#print(latest_closing)
 
 #with help from https://github.com/s2t2/robo-advisor-screencast/blob/master/app/robo_advisor.py
 high_prices = []
@@ -62,7 +62,7 @@ last_refreshed = parsed_response["Meta Data"]["3. Last Refreshed"]
 # INFO OUTPUTS
 #
 
-# TODO: write response data to a CSV file
+# write response data to a CSV file
 
 csv_file_path = os.path.join(os.path.dirname(__file__), "..", "data", "prices.csv")
 
@@ -84,7 +84,7 @@ with open(csv_file_path, "w") as csv_file: # "w" means "open the file for writin
 
 
 
-# TODO: further revise the example outputs below to reflect real information
+# further revise the example outputs below to reflect real information
 print("-----------------")
 print(f"STOCK SYMBOL: {symbol}")
 print("RUN AT: " +str(now))
@@ -94,8 +94,12 @@ print(f"LATEST CLOSE: {to_usd(float(latest_closing))}")
 print(f"RECENT HIGH: {to_usd(float(recent_high))}")
 print(f"RECENT LOW: {to_usd(float(recent_low))}")
 print("-----------------")
-print("RECOMMENDATION: Buy!")
-print("RECOMMENDATION REASON: Because the latest closing price is within threshold XYZ etc., etc. and this fits within your risk tolerance etc., etc.")
+if float(latest_closing) > float(recent_low)*1.5:
+    print("RECOMMENDATION: Do not buy")
+    print("RECOMMENDATION REASON: The latest closing price exceeds the 50% threshold over its recent low. Currently, it is not a good time to buy " + symbol +".")
+if float(latest_closing) < float(recent_low)*1.5:
+    print("RECOMMENDATION: Buy!")
+    print("RECOMMENDATION REASON: The latest closing price falls within the 50% threshold over its recent low. Thus, it is a good time to buy " + symbol + "- there is likely value remaining for prospective investors.")
 print("-----------------")
 print(f"WRITING DATA TO CSV: {csv_file_path}")
 print("-----------------")
