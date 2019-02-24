@@ -42,6 +42,10 @@ for s in symbols:
     #print(recent_high)
     #recent_low = 
 
+
+last_refreshed = parsed_response["Meta Data"]["3. Last Refreshed"]
+
+
 #
 # INFO OUTPUTS
 #
