@@ -9,7 +9,15 @@ load_dotenv() # loads environment variables set in a ".env" file, including the 
 api_key = os.environ.get("ALPHAVANTAGE_API_KEY")
 #print("API KEY: " + api_key) # TODO: remove or comment-out this line after you have verified the environment variable is getting read properly
 
-symbol = "NFLX" # TODO: capture user input, like... input("Please specify a stock symbol: ")
+symbols =[]
+while True:
+    symbol = input("Please specify a stock symbol: ")# TODO: capture user input, like... input("Please specify a stock symbol: ")
+    if symbol.isalpha() and len(symbol) <6 and symbol != "DONE":
+        symbols.append(symbol)
+    if symbol == "DONE":
+        break
+    if not symbol.isalpha() or len(symbol) >5:
+        print("Please enter a properly formatted stock ticker like 'MSFT'")
 
 # see: https://www.alphavantage.co/documentation/#daily (or a different endpoint, as desired)
 # TODO: assemble the request url to get daily data for the given stock symbol...
@@ -29,7 +37,7 @@ latest_price_usd = "$100,000.00"
 
 # TODO: further revise the example outputs below to reflect real information
 print("-----------------")
-print(f"STOCK SYMBOL: {symbol}")
+print(f"STOCK SYMBOL: {symbols}")
 print("RUN AT: 11:52pm on June 5th, 2018")
 print("-----------------")
 print("LATEST DAY OF AVAILABLE DATA: June 4th, 2018")
