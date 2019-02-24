@@ -7,7 +7,7 @@ load_dotenv() # loads environment variables set in a ".env" file, including the 
 
 # see: https://www.alphavantage.co/support/#api-key
 api_key = os.environ.get("ALPHAVANTAGE_API_KEY")
-print("API KEY: " + api_key) # TODO: remove or comment-out this line after you have verified the environment variable is getting read properly
+#print("API KEY: " + api_key) # TODO: remove or comment-out this line after you have verified the environment variable is getting read properly
 
 symbol = "NFLX" # TODO: capture user input, like... input("Please specify a stock symbol: ")
 
