@@ -2,6 +2,8 @@ from dotenv import load_dotenv
 import json
 import os
 import requests
+import datetime
+now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
 load_dotenv() # loads environment variables set in a ".env" file, including the value of the ALPHAVANTAGE_API_KEY variable
 
@@ -56,7 +58,7 @@ last_refreshed = parsed_response["Meta Data"]["3. Last Refreshed"]
 #for s in symbols:
 #    print("-----------------")
 #    print(f"STOCK SYMBOL: {s}")
-#    print("RUN AT: 11:52pm on June 5th, 2018")
+#    print("RUN AT: " +str(now))
 #    print("-----------------")
 #    print("LATEST DAY OF AVAILABLE DATA: June 4th, 2018")
 #    print(f"LATEST DAILY CLOSING PRICE: {latest_price_usd}")
