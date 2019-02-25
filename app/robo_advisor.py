@@ -106,7 +106,7 @@ if float(latest_closing) > ((float(recent_high)-float(recent_low))*0.5)+recent_l
     print("RECOMMENDATION REASON: The latest closing price exceeds the 50% threshold between its recent high and low. Currently, it is not a good time to buy " + symbol +".")
 if float(latest_closing) < ((float(recent_high)-float(recent_low))*0.5)+recent_low:
     print("RECOMMENDATION: Buy!")
-    print("RECOMMENDATION REASON: The latest closing price falls within the 50% threshold between the recent high and low. Thus, it is a good time to buy " + symbol + " - there is likely value remaining for prospective investors.")
+    print("RECOMMENDATION REASON: The latest closing price falls within the 50% threshold between the recent high and low. Thus, it is a good time to buy " + symbol + " - there is likely value remaining for prospective investors. Buy low, sell high!")
 print("-----------------")
 print(f"WRITING DATA TO CSV: {csv_file_path}")
 print("-----------------")
