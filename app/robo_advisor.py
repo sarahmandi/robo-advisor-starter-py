@@ -20,7 +20,7 @@ while True:
     symbol = input("Please specify a stock symbol: ")# TODO: capture user input, like... input("Please specify a stock symbol: ")
     if not symbol.isalpha() or len(symbol) >5:
         print("Please enter a properly formatted stock ticker like 'MSFT'.")
-    else:
+    else: #failing gracefully with help from: https://github.com/hiepnguyen034/robo-stock
         request_url = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=" + symbol + "&apikey={api_key}"
         response = requests.get(request_url)
         if 'Error' in response.text:
@@ -29,7 +29,7 @@ while True:
         else:
             break
 # see: https://www.alphavantage.co/documentation/#daily (or a different endpoint, as desired)
-# TODO: assemble the request url to get daily data for the given stock symbol...
+#assemble the request url to get daily data for the given stock symbol...
 # use the "requests" package to issue a "GET" request to the specified url, and store the JSON response in a variable...
 #print("RESPONSE STATUS: " + str(response.status_code))
 parsed_response = json.loads(response.text)
@@ -66,6 +66,7 @@ last_refreshed = parsed_response["Meta Data"]["3. Last Refreshed"]
 #
 
 # write response data to a CSV file
+#with help from https://github.com/s2t2/robo-advisor-screencast/blob/master/app/robo_advisor.py
 
 csv_file_path = os.path.join(os.path.dirname(__file__), "..", "data", "prices.csv")
 
@@ -97,6 +98,9 @@ print(f"LATEST CLOSE: {to_usd(float(latest_closing))}")
 print(f"RECENT HIGH: {to_usd(float(recent_high))}")
 print(f"RECENT LOW: {to_usd(float(recent_low))}")
 print("-----------------")
+
+##algorithm: if the stock is less than 50% between its high and low, buy because there is appreciation potential
+###if the stock exceeds 50% threshold between high and low, do not buy -- not much value left
 if float(latest_closing) > ((float(recent_high)-float(recent_low))*0.5)+recent_low:
     print("RECOMMENDATION: Do not buy")
     print("RECOMMENDATION REASON: The latest closing price exceeds the 50% threshold between its recent high and low. Currently, it is not a good time to buy " + symbol +".")
