@@ -18,16 +18,19 @@ api_key = os.environ.get("ALPHAVANTAGE_API_KEY")
 symbols =[]
 while True:
     symbol = input("Please specify a stock symbol: ")# TODO: capture user input, like... input("Please specify a stock symbol: ")
-    if symbol.isalpha() and len(symbol) <6:
-        break
     if not symbol.isalpha() or len(symbol) >5:
-        print("Please enter a properly formatted stock ticker like 'MSFT'")
-
+        print("Please enter a properly formatted stock ticker like 'MSFT'.")
+    else:
+        request_url = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=" + symbol + "&apikey={api_key}"
+        response = requests.get(request_url)
+        if 'Error' in response.text:
+            print("The stock you are looking for cannot be found, please enter another ticker.")
+            continue
+        else:
+            break
 # see: https://www.alphavantage.co/documentation/#daily (or a different endpoint, as desired)
 # TODO: assemble the request url to get daily data for the given stock symbol...
-request_url = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=" + symbol + "&apikey={api_key}"
 # use the "requests" package to issue a "GET" request to the specified url, and store the JSON response in a variable...
-response = requests.get(request_url)
 #print("RESPONSE STATUS: " + str(response.status_code))
 parsed_response = json.loads(response.text)
 #print(parsed_response)
@@ -94,12 +97,12 @@ print(f"LATEST CLOSE: {to_usd(float(latest_closing))}")
 print(f"RECENT HIGH: {to_usd(float(recent_high))}")
 print(f"RECENT LOW: {to_usd(float(recent_low))}")
 print("-----------------")
-if float(latest_closing) > float(recent_low)*1.5:
+if float(latest_closing) > ((float(recent_high)-float(recent_low))*0.5)+recent_low:
     print("RECOMMENDATION: Do not buy")
-    print("RECOMMENDATION REASON: The latest closing price exceeds the 50% threshold over its recent low. Currently, it is not a good time to buy " + symbol +".")
-if float(latest_closing) < float(recent_low)*1.5:
+    print("RECOMMENDATION REASON: The latest closing price exceeds the 50% threshold between its recent high and low. Currently, it is not a good time to buy " + symbol +".")
+if float(latest_closing) < ((float(recent_high)-float(recent_low))*0.5)+recent_low:
     print("RECOMMENDATION: Buy!")
-    print("RECOMMENDATION REASON: The latest closing price falls within the 50% threshold over its recent low. Thus, it is a good time to buy " + symbol + "- there is likely value remaining for prospective investors.")
+    print("RECOMMENDATION REASON: The latest closing price falls within the 50% threshold between the recent high and low. Thus, it is a good time to buy " + symbol + " - there is likely value remaining for prospective investors.")
 print("-----------------")
 print(f"WRITING DATA TO CSV: {csv_file_path}")
 print("-----------------")
